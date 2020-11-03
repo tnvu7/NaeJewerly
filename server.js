@@ -21,12 +21,20 @@ var path = require("path");
 const multer = require('multer');
 const bodyParser = require("body-parser");
 
+var exphbs = require("express-handlebars");
+
 var HTTP_PORT = process.env.PORT || 8080;
 
 function onHttpStart(){
     console.log("Express http server listening on: " + HTTP_PORT);
 }
 app.use(bodyParser.urlencoded({extended: true}));
+
+app.engine(".hbs", exphbs({
+    extname:".hbs",
+    defaultLayout: "main"
+}));
+app.set("view engine", ".hbs");
 
 const storage = multer.diskStorage({
     destination: "./public/images/uploaded",
