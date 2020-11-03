@@ -52,15 +52,15 @@ app.get("/", function(req, res){
 });
 
 app.get("/about", function(req, res){
-    res.sendFile(path.join(__dirname, "/views/about.html"));
+    res.render("about");
 });
 
 app.get("/employees/add", function(req, res){
-    res.sendFile(path.join(__dirname, "/views/addEmployee.html"))
+    res.render("addEmployee");
 });
 
 app.get("/images/add", function(req, res){
-    res.sendFile(path.join(__dirname, "/views/addImage.html"))
+    res.render("addImage");
 });
 
 app.get("/employees", function(req, res){
