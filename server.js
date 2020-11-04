@@ -32,8 +32,23 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 app.engine(".hbs", exphbs({
     extname:".hbs",
-    defaultLayout: "main"
-}));
+    defaultLayout: "main",
+    helpers: {
+    navLink: function(url, options){
+        return '<li' +
+        ((url == app.locals.activeRoute) ? ' class="active" ' : '') +
+        '><a href=" ' + url + ' ">' + options.fn(this) + '</a></li>';
+        },
+        equal: function (lvalue, rvalue, options) {
+            if (arguments.length < 3)
+            throw new Error("Handlebars Helper equal needs 2 parameters");
+            if (lvalue != rvalue) {
+            return options.inverse(this);
+            } else {
+            return options.fn(this);
+            }
+        }
+}}));
 app.set("view engine", ".hbs");
 
 const storage = multer.diskStorage({
@@ -46,6 +61,12 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
+app.use(function(req,res,next){
+    let route = req.baseUrl + req.path;
+    app.locals.activeRoute = (route == "/") ? "/" : route.replace(/\/$/, "");
+    next();
+    });
+      
 app.use(express.static("./public/"));
 app.get("/", function(req, res){
     res.render("home");
@@ -103,13 +124,6 @@ app.get("/employee/:num", function(req, res) {
     message.getEmployeeByNum(req.params.num).then((data)=>{
         res.json(data);
     }).catch((err)=> {
-        res.send({message: err});
-    });
-});
-app.get("/managers", function(req, res){
-    message.getManagers().then((data)=> {
-        res.json(data);
-    }).catch((err)=>{
         res.send({message: err});
     });
 });
