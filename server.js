@@ -89,33 +89,33 @@ app.get("/employees", function(req, res){
     if (params.has('status')) 
     {
         message.getEmployeesByStatus(req.query.status).then((data)=>{
-            res.json(data);
+            res.render("employees", {employees: data});
         }).catch((err)=> {
-            res.send({message: err});
+            res.render({message: "no results"});
         });
     }
     else if (params.has('department'))
     {
         message.getEmployeesByDepartment(req.query.department).then((data)=>{
-            res.json(data);
+            res.render("employees", {employees: data});
         }).catch((err)=> {
-            res.send({message: err});
+            res.render({message: "no results"});
         });
     }
     else if (params.has('manager'))
     {
         message.getEmployeesByManager(req.query.manager).then((data)=>{
-            res.json(data);
+            res.render("employees", {employees: data});
         }).catch((err)=> {
-            res.send({message: err});
+            res.render({message: "no results"});
         });
     }
     else{
         message.getAllEmployees().then((data)=>
         {
-            res.json(data);
+            res.render("employees", {employees: data});
         }).catch((err)=> {
-            res.send({message: err});
+            res.render({message: "no results"});
         });
     }
 
@@ -139,7 +139,7 @@ app.get("/departments", function(req, res){
 const fs = require('fs');
 app.get("/images", function(req, res){
     fs.readdir('./public/images/uploaded', function(err, items) {
-        res.json(items);
+        res.render("images", {items});
     });
 });
 
