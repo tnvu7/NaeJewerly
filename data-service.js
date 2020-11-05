@@ -172,3 +172,16 @@ exports.getEmployeeByNum=(num)=>{
         
     });
 }
+
+exports.updateEmployee=(employeeData)=> {
+    return new Promise(function(resolve, reject) {
+   for (var i = 0; i< employees.length; i++)
+        {
+            if (employees[i].employeeNum == employeeData.employeeNum)
+            {
+                Object.assign(employees[i], employeeData);
+                resolve();
+            }
+        }
+    });
+}

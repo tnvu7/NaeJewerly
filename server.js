@@ -122,15 +122,15 @@ app.get("/employees", function(req, res){
 });
 app.get("/employee/:num", function(req, res) {
     message.getEmployeeByNum(req.params.num).then((data)=>{
-        res.json(data);
+        res.render("employee", { employee: data });
     }).catch((err)=> {
-        res.send({message: err});
+        res.render("employee",{message:"no results"});
     });
 });
 
 app.get("/departments", function(req, res){
     message.getDepartments().then((data)=>{
-        res.json(data);
+        res.render("departments", {departments: data});
     }).catch((err)=> {
         res.send({message: err});
     });
@@ -160,6 +160,12 @@ app.post("/employees/add", (req, res) => {
         res.redirect("/employees");
     }).catch((err)=> {
         res.send({message: err});
+    });
+});
+
+app.post("/employee/update", (req, res) => { 
+    message.updateEmployee(req.body).then(()=> {
+        res.redirect("/employees"); 
     });
 });
 

@@ -39,12 +39,14 @@
                 </td>
                 <td> {{hireDate}} </td>
             </tr>
+            {{else}}
+                <div class="col-md-12 text-center">
+                <strong>{{message}}</strong>
+                </div>
             {{/each}}
         </tbody>
     </table>
 </div>
-    <div class="col-md-12 text-center">
-    <strong>{{message}}</strong>
-    </div>
+    
 </div>
 </div>
