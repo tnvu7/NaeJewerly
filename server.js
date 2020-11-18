@@ -91,7 +91,7 @@ app.get("/employees", function(req, res){
         message.getEmployeesByStatus(req.query.status).then((data)=>{
             res.render("employees", {employees: data});
         }).catch((err)=> {
-            res.render({message: "no results"});
+            res.render("employees", {message: "no results"});
         });
     }
     else if (params.has('department'))
@@ -99,23 +99,27 @@ app.get("/employees", function(req, res){
         message.getEmployeesByDepartment(req.query.department).then((data)=>{
             res.render("employees", {employees: data});
         }).catch((err)=> {
-            res.render({message: "no results"});
+            res.render("employees", {message: "no results"});
         });
     }
     else if (params.has('manager'))
     {
         message.getEmployeesByManager(req.query.manager).then((data)=>{
-            res.render("employees", {employees: data});
+             res.render("employees", {employees: data});
         }).catch((err)=> {
-            res.render({message: "no results"});
+            res.render("employees", {message: "no results"});
         });
     }
     else{
         message.getAllEmployees().then((data)=>
         {
+        if (data.length > 0) {
             res.render("employees", {employees: data});
+        }else{
+            res.render("employees",{ message: "no results" });
+        }
         }).catch((err)=> {
-            res.render({message: "no results"});
+            res.render("employees", {message: err});
         });
     }
 
@@ -130,9 +134,15 @@ app.get("/employee/:num", function(req, res) {
 
 app.get("/departments", function(req, res){
     message.getDepartments().then((data)=>{
-        res.render("departments", {departments: data});
+        if (data.length > 0) {
+            res.render("departments", {departments: data});
+        }
+        else{
+        res.render("departments",{ message: "no results" });
+        //res.send("no results");
+        }
     }).catch((err)=> {
-        res.send({message: err});
+        res.render("departments",{ message: err });
     });
 });
 
