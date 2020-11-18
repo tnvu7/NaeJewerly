@@ -124,6 +124,19 @@ app.get("/employees", function(req, res){
     }
 
 });
+app.get("/departments", function(req, res){
+    message.getDepartments().then((data)=>{
+        if (data.length > 0) {
+            res.render("departments", {departments: data});
+        }
+        else{
+            res.render("departments",{ message: "no results" });
+        }
+    }).catch((err)=> {
+        res.render("departments",{ message: err });
+    });
+});
+
 app.get("/employee/:num", function(req, res) {
     message.getEmployeeByNum(req.params.num).then((data)=>{
         res.render("employee", { employee: data });
@@ -132,19 +145,6 @@ app.get("/employee/:num", function(req, res) {
     });
 });
 
-app.get("/departments", function(req, res){
-    message.getDepartments().then((data)=>{
-        if (data.length > 0) {
-            res.render("departments", {departments: data});
-        }
-        else{
-        res.render("departments",{ message: "no results" });
-        //res.send("no results");
-        }
-    }).catch((err)=> {
-        res.render("departments",{ message: err });
-    });
-});
 
 const fs = require('fs');
 app.get("/images", function(req, res){
