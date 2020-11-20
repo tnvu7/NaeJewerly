@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-md-12">
-        <h2>{{viewData.firstName}} {{ viewData.lastName}} - Employee: {{ viewData.employee.employeeNum}}</h2>
+        <h2>{{viewData.employee.firstName}} {{ viewData.employee.lastName}} - Employee: {{ viewData.employee.employeeNum}}</h2>
         <hr />
         <form method="post" action="/employee/update">
             <input type="hidden" id="employeeNum" name="employeeNum" value="{{viewData.employee.employeeNum}}">
@@ -93,13 +93,13 @@
                     <div class="form-group">
                         <label for="department"> Department: </label>
                         {{#if viewData.departments}}
-                        <select class="form-control" name="department" id="department">
+                            <select class="form-control" name="department" id="department">
                             {{#each viewData.departments}}
-                                <option value="{{departmentId}}" {{#if selected}} selected {{/if}} >{{departmentName}} </option>
+                            <option value="{{departmentId}}" {{#if selected}} selected {{/if}} >{{departmentName}} </option>
                             {{/each}}
-                                </select>
-                            {{else}}
-                                <div>No Departments</div>
+                            </select>
+                        {{else}}
+                        <div>No Departments</div>
                         {{/if}}
                     </div>
                 </div>

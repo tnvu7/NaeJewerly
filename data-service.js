@@ -179,14 +179,15 @@ exports.getEmployeesByManager=(manager)=>{
 
 exports.getEmployeeByNum=(num)=>{
     return new Promise(function(resolve, reject) {
-        Employee.findAll().then(function(data)
+        Employee.findAll({
+            where: {employeeNum: num}
+        }).then((data) =>
         {
-            var tmp = [];
-            for (let i = 0; i<data.length; i++){
-                if (data[i].employeeNum == num)
-                    tmp.push(data[i]);
-            }
-            resolve(tmp);
+           data = data.map(value => value.dataValues);
+           if (data.length > 0)
+            resolve(data[0]);
+            else
+            reject("ERROR: Cannot find employee");
         }).catch((err) => {
             reject("no results returned.");
         });
@@ -195,14 +196,15 @@ exports.getEmployeeByNum=(num)=>{
 
 exports.getDepartmentById=(id)=>{
     return new Promise(function(resolve, reject) {
-        Department.findAll().then(function(data)
+        Department.findAll({
+                where: {departmentId: id}
+            }).then((data) =>
         {
-            let tmp = {};
-            for (let i = 0; i<data.length; i++){
-                if (data[i].departmentId == id)
-                    tmp = data[i];
-            }
-            resolve(tmp);
+            data = data.map(value => value.dataValues);
+            if (data.length > 0)
+             resolve(data[0]);
+             else
+             reject("ERROR: Cannot find employee");
         }).catch((err) => {
             reject("no results returned.");
         });
@@ -216,10 +218,9 @@ exports.updateEmployee=(employeeData)=> {
             if (employeeData[obj] == "")
                 employeeData[obj] = null;
         }
-      
-        Employee.update({
+        Employee.update(employeeData, {
             where: {employeeNum: employeeData.employeeNum}
-        }).then((data) => resolve("Update success.")).catch((e) =>
+        }).then((data) => resolve()).catch((e) =>
         reject("ERROR: Cannot Update."));
     }).catch(() => console.log("ERROR: no results returned."));
 }
@@ -230,7 +231,7 @@ exports.deleteEmployeeByNum=(empNum)=> {
             where: {employeeNum: empNum}
         }).then((data)=>
         {
-            resolve(data);
+            resolve();
         }).catch((err) =>{
             reject("ERROR: Cannot delete employee");
         });

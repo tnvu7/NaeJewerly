@@ -1,10 +1,10 @@
 /*********************************************************************************
-* BTI325 – Assignment 4
+* BTI325 – Assignment 5
 * I declare that this assignment is my own work in accordance with Seneca Academic Policy.
 * No part of this assignment has been copied manually or electronically from any other source
 * (including web sites) or distributed to other students.
 *
-* Name: Thu Nga (Natalie) Vu    Student ID: 132 165 192     Date: 2020/11/05
+* Name: Thu Nga (Natalie) Vu    Student ID: 132 165 192     Date: 2020/11/20
 *
 * Online (Heroku) URL: (make sure you include the link ending with .com, NOT .git
 * https://mysterious-savannah-61047.herokuapp.com/
@@ -153,7 +153,7 @@ app.get("/departments", function(req, res){
 
 app.get("/employees/delete/:empNum", (req, res) => {
     message.deleteEmployeeByNum(req.params.empNum).then((data) => {
-        res.render("employees", {employees: data});
+        res.redirect("/employees");
     }).catch((err) => {
         res.status(500).send("Unable to Remove Employee / Employee not found");
     });
@@ -163,32 +163,32 @@ app.get("/employee/:empNum", (req, res) => {
     // initialize an empty object to store the values
     let viewData = {};
     message.getEmployeeByNum(req.params.empNum).then((data) => {
-        if (data) {
-        viewData.employee = data; //store employee data in the "viewData" object as "employee"
-        } else {
-        viewData.employee = null; // set employee to null if none were returned
-        }
+    if (data) {
+    viewData.employee = data; //store employee data in the "viewData" object as "employee"
+    } else {
+    viewData.employee = null; // set employee to null if none were returned
+    }
     }).catch(() => {
-        viewData.employee = null; // set employee to null if there was an error
+    viewData.employee = null; // set employee to null if there was an error
     }).then(message.getDepartments)
     .then((data) => {
-    message.departments = data; // store department data in the "viewData" object as "departments"
+    viewData.departments = data; // store department data in the "viewData" object as "departments"
     // loop through viewData.departments and once we have found the departmentId that matches
     // the employee's "department" value, add a "selected" property to the matching
     // viewData.departments object
     for (let i = 0; i < viewData.departments.length; i++) {
-        if (viewData.departments[i].departmentId == viewData.employee.department) {
-            viewData.departments[i].selected = true;
-        }
+    if (viewData.departments[i].departmentId == viewData.employee.department) {
+    viewData.departments[i].selected = true;
+    }
     }
     }).catch(() => {
-        viewData.departments = []; // set departments to empty if there was an error
+    viewData.departments = []; // set departments to empty if there was an error
     }).then(() => {
-        if (viewData.employee == null) { // if no employee - return an error
-            res.status(404).send("Employee Not Found");
+    if (viewData.employee == null) { // if no employee - return an error
+    res.status(404).send("Employee Not Found");
     } else {
-        res.render("employee", { viewData: viewData }); // render the "employee" view
-        }
+    res.render("employee", { viewData: viewData }); // render the "employee" view
+    }
     });
     });
 
@@ -196,7 +196,7 @@ app.get("/department/:departmentId", function(req, res) {
     message.getDepartmentById(req.params.departmentId).then((data)=>{
         if (data) 
         {
-            console.log(data);
+            //console.log(data);
             res.render("department", { department: data });
         }
         else
