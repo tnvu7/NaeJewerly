@@ -48,7 +48,12 @@ app.engine(".hbs", exphbs({
             return options.fn(this);
             }
         }
-}}));
+},
+runtimeOptions: {
+    allowProtoPropertiesByDefault: true,
+    allowProtoMethodsByDefault: true
+}
+}));
 app.set("view engine", ".hbs");
 
 const storage = multer.diskStorage({
@@ -77,7 +82,15 @@ app.get("/about", function(req, res){
 });
 
 app.get("/employees/add", function(req, res){
-    res.render("addEmployee");
+    message.getDepartments().then((data)=> {
+        res.render("addEmployee", {departments: data});
+    }).catch((err)=>{
+        res.render("addEmployee", {departments: []});
+    });
+});
+
+app.get("/departments/add", function(req, res){
+    res.render("addDepartment");
 });
 
 app.get("/images/add", function(req, res){
@@ -116,7 +129,7 @@ app.get("/employees", function(req, res){
         if (data.length > 0) {
             res.render("employees", {employees: data});
         }else{
-            res.render("employees",{ message: "no results" });
+            res.render("employees",{ message: "No results." });
         }
         }).catch((err)=> {
             res.render("employees", {message: err});
@@ -130,21 +143,68 @@ app.get("/departments", function(req, res){
             res.render("departments", {departments: data});
         }
         else{
-            res.render("departments",{ message: "no results" });
+            
+            res.render("departments",{ message: "No results." });
         }
     }).catch((err)=> {
         res.render("departments",{ message: err });
     });
 });
 
-app.get("/employee/:num", function(req, res) {
-    message.getEmployeeByNum(req.params.num).then((data)=>{
-        res.render("employee", { employee: data });
-    }).catch((err)=> {
-        res.render("employee",{message:"no results"});
+app.get("/employees/delete/:empNum", (req, res) => {
+    message.deleteEmployeeByNum(req.params.empNum).then((data) => {
+        res.render("employees", {employees: data});
+    }).catch((err) => {
+        res.status(500).send("Unable to Remove Employee / Employee not found");
     });
 });
 
+app.get("/employee/:empNum", (req, res) => {
+    // initialize an empty object to store the values
+    let viewData = {};
+    message.getEmployeeByNum(req.params.empNum).then((data) => {
+        if (data) {
+        viewData.employee = data; //store employee data in the "viewData" object as "employee"
+        } else {
+        viewData.employee = null; // set employee to null if none were returned
+        }
+    }).catch(() => {
+        viewData.employee = null; // set employee to null if there was an error
+    }).then(message.getDepartments)
+    .then((data) => {
+    message.departments = data; // store department data in the "viewData" object as "departments"
+    // loop through viewData.departments and once we have found the departmentId that matches
+    // the employee's "department" value, add a "selected" property to the matching
+    // viewData.departments object
+    for (let i = 0; i < viewData.departments.length; i++) {
+        if (viewData.departments[i].departmentId == viewData.employee.department) {
+            viewData.departments[i].selected = true;
+        }
+    }
+    }).catch(() => {
+        viewData.departments = []; // set departments to empty if there was an error
+    }).then(() => {
+        if (viewData.employee == null) { // if no employee - return an error
+            res.status(404).send("Employee Not Found");
+    } else {
+        res.render("employee", { viewData: viewData }); // render the "employee" view
+        }
+    });
+    });
+
+app.get("/department/:departmentId", function(req, res) {
+    message.getDepartmentById(req.params.departmentId).then((data)=>{
+        if (data) 
+        {
+            console.log(data);
+            res.render("department", { department: data });
+        }
+        else
+            res.status(404).send("Department Not Found");
+    }).catch((err)=> {
+        res.status(404).send("Department Not Found");
+    });
+});
 
 const fs = require('fs');
 app.get("/images", function(req, res){
@@ -173,9 +233,28 @@ app.post("/employees/add", (req, res) => {
     });
 });
 
+app.post("/departments/add", (req, res) => {
+    const formData = req.body;
+    message.addDepartment(formData).then((data)=>{
+        res.redirect("/departments");
+    }).catch((err)=> {
+        res.send({message: err});
+    });
+});
+
 app.post("/employee/update", (req, res) => { 
     message.updateEmployee(req.body).then(()=> {
         res.redirect("/employees"); 
+    }).catch((err)=>{
+        res.status(500).send("Unable to Update Employee");
+        });
+});
+
+app.post("/department/update", (req, res) => { 
+    message.updateDepartment(req.body).then(()=> {
+        res.redirect("/departments"); 
+    }).catch((err)=>{
+        res.status(500).send("Unable to Update Department");
     });
 });
 

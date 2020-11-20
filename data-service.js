@@ -45,10 +45,13 @@ var Department = sequelize.define("Department", {
     departmentId: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true  
     },
     departmentName: Sequelize.STRING
-})
+}, {
+    createdAt: false,
+    updatedAt: false
+});
 exports.initialize=()=>{
     return new Promise(function(resolve, reject) {
         sequelize.sync().then(() =>
@@ -65,7 +68,7 @@ exports.getAllEmployees=()=> {
             resolve(data);
         }).catch((err) => {
             reject("no results returned.")
-        })
+        });
     });
 }
 
@@ -75,25 +78,56 @@ exports.getDepartments=()=> {
             resolve(data);
         }).catch((err) => {
             reject("no results returned.")
-        })
+        });
     });
 }
 
 exports.addEmployee=(employeeData)=>{
     return new Promise(function(resolve, reject) {
         employeeData.isManager = (employeeData.isManager) ? true : false;
-        for (obj in employeeData)
+        for (let obj in employeeData)
         {
-            if (employeeData.obj == "")
-                employeeData.obj = null;
+            if (employeeData[obj] === "")
+                employeeData[obj] = null;
         }
         Employee.create(employeeData).then((data) =>{
-            resolve("Sucessfully added ", employeeData.firstName); //check
+            resolve("Sucessfully added employee"); //check
         }).catch((err) =>{
-            reject("unable to create employee");
-        })
+            reject("Unable to create employee");
+        });
     });
 }
+
+exports.addDepartment=(departmentData) => {
+    return new Promise(function(resolve, reject) {
+        for (let obj in departmentData)
+        {
+            if (departmentData[obj] == "")
+                departmentData[obj] = null;
+        }
+        Department.create(departmentData).then((data) =>{
+            resolve("Sucessfully added department"); 
+        }).catch((err) =>{
+            reject("unable to create employee");
+        });
+    });
+}
+
+exports.updateDepartment=(departmentData)=> {
+    return new Promise(function(resolve, reject) {
+        for (let obj in departmentData)
+        {
+            if (departmentData[obj] === "")
+                departmentData[obj] = null;
+        }
+        Department.update(departmentData, {
+            where: {departmentId: departmentData.departmentId}
+        }).then((data) => 
+        resolve("Department Update success.")).catch((e) =>
+        reject("ERROR: Unable to update department"));
+    });
+}
+
 
 exports.getEmployeesByStatus=(status)=>{
     return new Promise(function(resolve, reject) {
@@ -107,7 +141,7 @@ exports.getEmployeesByStatus=(status)=>{
             resolve(tmp);
         }).catch((err) => {
             reject("no results returned.")
-        })
+        });
     });
 }
 
@@ -116,14 +150,14 @@ exports.getEmployeesByDepartment=(department)=>{
         Employee.findAll().then(function(data)
         {
             var tmp = [];
-            for (var i = 0; i<data.length; i++){
+            for (let i = 0; i<data.length; i++){
                 if (data[i].department == department)
                     tmp.push(data[i]);
             }
             resolve(tmp);
         }).catch((err) => {
-            reject("no results returned.")
-        })
+            reject("no results returned.");
+        });
     });
 }
 
@@ -132,14 +166,14 @@ exports.getEmployeesByManager=(manager)=>{
         Employee.findAll().then(function(data)
         {
             var tmp = [];
-            for (var i = 0; i<data.length; i++){
+            for (let i = 0; i<data.length; i++){
                 if (data[i].employeeManagerNum == manager)
                     tmp.push(data[i]);
             }
             resolve(tmp);
         }).catch((err) => {
             reject("no results returned.")
-        })
+        });
     });
 }
 
@@ -148,24 +182,39 @@ exports.getEmployeeByNum=(num)=>{
         Employee.findAll().then(function(data)
         {
             var tmp = [];
-            for (var i = 0; i<data.length; i++){
+            for (let i = 0; i<data.length; i++){
                 if (data[i].employeeNum == num)
                     tmp.push(data[i]);
             }
             resolve(tmp);
         }).catch((err) => {
-            reject("no results returned.")
-        })
+            reject("no results returned.");
+        });
     });
 }
 
+exports.getDepartmentById=(id)=>{
+    return new Promise(function(resolve, reject) {
+        Department.findAll().then(function(data)
+        {
+            let tmp = {};
+            for (let i = 0; i<data.length; i++){
+                if (data[i].departmentId == id)
+                    tmp = data[i];
+            }
+            resolve(tmp);
+        }).catch((err) => {
+            reject("no results returned.");
+        });
+    });
+}
 exports.updateEmployee=(employeeData)=> {
     return new Promise(function(resolve, reject) {
         employeeData.isManager = (employeeData.isManager) ? true : false;
-        for (obj in employeeData)
+        for (let obj in employeeData)
         {
-            if (employeeData.obj == "")
-                employeeData.obj = null;
+            if (employeeData[obj] == "")
+                employeeData[obj] = null;
         }
       
         Employee.update({
@@ -173,5 +222,17 @@ exports.updateEmployee=(employeeData)=> {
         }).then((data) => resolve("Update success.")).catch((e) =>
         reject("ERROR: Cannot Update."));
     }).catch(() => console.log("ERROR: no results returned."));
-    //});
+}
+
+exports.deleteEmployeeByNum=(empNum)=> {
+    return new Promise(function(resolve, reject) {
+        Employee.destroy({
+            where: {employeeNum: empNum}
+        }).then((data)=>
+        {
+            resolve(data);
+        }).catch((err) =>{
+            reject("ERROR: Cannot delete employee");
+        });
+    });
 }
