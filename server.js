@@ -11,6 +11,7 @@
 
 *******************************************************************/
 
+var dataServiceAuth = require("data-service-auth.js");
 var message = require('./data-service.js');
 
 var express = require("express");
