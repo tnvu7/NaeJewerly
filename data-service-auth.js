@@ -62,6 +62,27 @@ exports.registerUser=(userData)=>{
 }
 exports.checkUser=(userData)=>{
     return new Promise(function(resolve, reject) {
-        
-    })
+        User.findOne({ userName: userData.userName })
+        .exec().then((foundUser)=> {
+            if (foundUser.password === userData.password)
+            {
+                User.updateOne(
+                    {userName: foundUser.userName},
+                    {$set:{loginHistory: foundUser.loginHistory}}
+                ).exec().then(()=>{
+                    resolve(foundUser);
+                }).catch((err)=>
+                {
+                    reject("There was an error verifying the user: " + err);
+                });
+            }
+            else
+            {
+                reject("Incorrect Password for user: userData.userName");
+            }
+        }).catch((err)=> {
+            reject("Unable to find user: userData.userName")
+        });
+    });
 }
+

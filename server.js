@@ -259,8 +259,11 @@ app.post("/department/update", (req, res) => {
     });
 });
 
-message.initialize().then(()=>{
+
+message.initialize()
+.then(dataServiceAuth.initialize)
+.then(()=>{
     app.listen(HTTP_PORT, onHttpStart);
 }).catch((err)=> {
-    console.log("Error: " + err);
+    console.log("Unable to start server: " + err);
 });
