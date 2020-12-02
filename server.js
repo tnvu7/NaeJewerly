@@ -24,12 +24,25 @@ const bodyParser = require("body-parser");
 
 var exphbs = require("express-handlebars");
 
+const clientSessions = require("client-sessions");
+
 var HTTP_PORT = process.env.PORT || 8080;
 
 function onHttpStart(){
     console.log("Express http server listening on: " + HTTP_PORT);
 }
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(clientSessions({
+    cookieName: "session", 
+    secret: "SecretMessageForAssignment4", 
+    duration: 2 * 60 * 1000, 
+    activeDuration: 1000 * 60 
+  }));
+
+  app.use(function(req, res, next) {
+    res.locals.session = req.session;
+    next();
+    });
 
 app.engine(".hbs", exphbs({
     extname:".hbs",
@@ -57,6 +70,15 @@ runtimeOptions: {
 }));
 app.set("view engine", ".hbs");
 
+//middleware
+function ensureLogin(req, res, next) {
+    if (!req.session.user) {
+      res.redirect("/login");
+    } else {
+      next();
+    }
+  }
+
 const storage = multer.diskStorage({
     destination: "./public/images/uploaded",
     filename: function (req, file, cb) {
@@ -82,7 +104,7 @@ app.get("/about", function(req, res){
     res.render("about");
 });
 
-app.get("/employees/add", function(req, res){
+app.get("/employees/add", ensureLogin, function(req, res){
     message.getDepartments().then((data)=> {
         res.render("addEmployee", {departments: data});
     }).catch((err)=>{
@@ -90,15 +112,15 @@ app.get("/employees/add", function(req, res){
     });
 });
 
-app.get("/departments/add", function(req, res){
+app.get("/departments/add", ensureLogin,function(req, res){
     res.render("addDepartment");
 });
 
-app.get("/images/add", function(req, res){
+app.get("/images/add", ensureLogin, function(req, res){
     res.render("addImage");
 });
 
-app.get("/employees", function(req, res){
+app.get("/employees", ensureLogin, function(req, res){
     const params = new URLSearchParams(req.query);
     if (params.has('status')) 
     {
@@ -138,7 +160,7 @@ app.get("/employees", function(req, res){
     }
 
 });
-app.get("/departments", function(req, res){
+app.get("/departments", ensureLogin, function(req, res){
     message.getDepartments().then((data)=>{
         if (data.length > 0) {
             res.render("departments", {departments: data});
@@ -152,7 +174,7 @@ app.get("/departments", function(req, res){
     });
 });
 
-app.get("/employees/delete/:empNum", (req, res) => {
+app.get("/employees/delete/:empNum", ensureLogin, (req, res) => {
     message.deleteEmployeeByNum(req.params.empNum).then((data) => {
         res.redirect("/employees");
     }).catch((err) => {
@@ -160,7 +182,7 @@ app.get("/employees/delete/:empNum", (req, res) => {
     });
 });
 
-app.get("/employee/:empNum", (req, res) => {
+app.get("/employee/:empNum", ensureLogin, (req, res) => {
     // initialize an empty object to store the values
     let viewData = {};
     message.getEmployeeByNum(req.params.empNum).then((data) => {
@@ -193,7 +215,7 @@ app.get("/employee/:empNum", (req, res) => {
     });
     });
 
-app.get("/department/:departmentId", function(req, res) {
+app.get("/department/:departmentId", ensureLogin, function(req, res) {
     message.getDepartmentById(req.params.departmentId).then((data)=>{
         if (data) 
         {
@@ -208,7 +230,7 @@ app.get("/department/:departmentId", function(req, res) {
 });
 
 const fs = require('fs');
-app.get("/images", function(req, res){
+app.get("/images", ensureLogin, function(req, res){
     fs.readdir('./public/images/uploaded', function(err, items) {
         res.render("images", {items});
     });
@@ -220,12 +242,12 @@ app.get('*', function(req, res){
     
 });
 
-app.post("/images/add", upload.single("imageFile"), (req, res) =>
+app.post("/images/add", ensureLogin, upload.single("imageFile"), (req, res) =>
 {
     res.redirect("/images");
 });
 
-app.post("/employees/add", (req, res) => {
+app.post("/employees/add", ensureLogin, (req, res) => {
     const formData = req.body;
     message.addEmployee(formData).then((data)=>{
         res.redirect("/employees");
@@ -234,7 +256,7 @@ app.post("/employees/add", (req, res) => {
     });
 });
 
-app.post("/departments/add", (req, res) => {
+app.post("/departments/add", ensureLogin, (req, res) => {
     const formData = req.body;
     message.addDepartment(formData).then((data)=>{
         res.redirect("/departments");
@@ -243,7 +265,7 @@ app.post("/departments/add", (req, res) => {
     });
 });
 
-app.post("/employee/update", (req, res) => { 
+app.post("/employee/update", ensureLogin, (req, res) => { 
     message.updateEmployee(req.body).then(()=> {
         res.redirect("/employees"); 
     }).catch((err)=>{
@@ -251,7 +273,7 @@ app.post("/employee/update", (req, res) => {
         });
 });
 
-app.post("/department/update", (req, res) => { 
+app.post("/department/update", ensureLogin, (req, res) => { 
     message.updateDepartment(req.body).then(()=> {
         res.redirect("/departments"); 
     }).catch((err)=>{
@@ -259,7 +281,37 @@ app.post("/department/update", (req, res) => {
     });
 });
 
-
+app.get("/login", (req, res) => {
+    res.render("login");
+});
+app.get("/register", (req, res)=> {
+    res.render("register");
+});
+app.post("/register", (req, res) => {
+    dataServiceAuth.registerUser(req.body).then(()=>{
+        res.render("register", {successMessage: "User created"})
+    }).catch((err)=> {
+        res.render("register", {errorMessage: err, userName: req.body.userName});
+    });
+});
+app.post("/login", (req, res) => {
+    req.body.userAgent = req.get('User-Agent');
+    dataServiceAuth.checkUser(req.body).then((user) => {
+        req.session.user = {
+        userName: user.userName,
+        email: user.email,
+        loginHistory: user.loginHistory
+        }
+        res.redirect('/employees');
+    });
+});
+app.get("/logout", function(req, res) {
+    req.session.reset();
+    res.redirect("/");
+  });
+app.get("/userHistory", ensureLogin, (req, res)=> {
+    res.render("userHistory");
+});
 message.initialize()
 .then(dataServiceAuth.initialize)
 .then(()=>{
