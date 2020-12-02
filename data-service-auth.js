@@ -22,12 +22,15 @@ exports.initialize=()=>{
     return new Promise(function(resolve, reject) {
         //connect to module
         mongoose.set('useCreateIndex', true);
-        var uri2 = "mongodb+srv://vuthu:<0000>@senecaweb.gj8ce.mongodb.net/<dbname>?retryWrites=true&w=majority"
+        var uri2 = "mongodb+srv://vuthu:0000@senecaweb.gj8ce.mongodb.net/<dbname>?retryWrites=true&w=majority";
         let db1 = mongoose.createConnection(uri2, {
             useNewUrlParser: true, useUnifiedTopology: true
         },
         function (err) {
-            if (err) reject(err);
+            if (err) 
+            {
+                reject(err);
+            }
             else 
             {
                 //register

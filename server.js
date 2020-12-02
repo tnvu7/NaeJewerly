@@ -11,7 +11,7 @@
 
 *******************************************************************/
 
-var dataServiceAuth = require("data-service-auth.js");
+var dataServiceAuth = require("./data-service-auth.js");
 var message = require('./data-service.js');
 
 var express = require("express");
@@ -236,11 +236,7 @@ app.get("/images", ensureLogin, function(req, res){
     });
 });
 
-app.get('*', function(req, res){
-    res.status(404);
-    res.sendFile(path.join(__dirname, "/views/errorpage.html"));
-    
-});
+
 
 app.post("/images/add", ensureLogin, upload.single("imageFile"), (req, res) =>
 {
@@ -311,6 +307,12 @@ app.get("/logout", function(req, res) {
   });
 app.get("/userHistory", ensureLogin, (req, res)=> {
     res.render("userHistory");
+});
+
+app.get('*', function(req, res){
+    res.status(404);
+    res.sendFile(path.join(__dirname, "/views/errorpage.html"));
+    
 });
 message.initialize()
 .then(dataServiceAuth.initialize)
