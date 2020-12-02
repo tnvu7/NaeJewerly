@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
-const { STRING, DatabaseError } = require("sequelize/types");
+const bcrypt = require('bcryptjs');
+
 var Schema = mongoose.Schema;
 
 var userSchema = new Schema({
