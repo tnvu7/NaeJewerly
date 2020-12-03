@@ -70,6 +70,8 @@ exports.checkUser=(userData)=>{
         .exec().then((foundUser)=> {
             if (foundUser.password === userData.password)
             {
+                console.log(foundUser);
+                foundUser.loginHistory.push({dateTime: (new Date()).toString(), userAgent: foundUser.userAgent});
                 User.updateOne(
                     {userName: foundUser.userName},
                     {$set:{loginHistory: foundUser.loginHistory}}
@@ -82,10 +84,11 @@ exports.checkUser=(userData)=>{
             }
             else
             {
-                reject("Incorrect Password for user: userData.userName");
+                reject("Incorrect Password for user: " + userData.userName);
             }
         }).catch((err)=> {
-            reject("Unable to find user: userData.userName")
+            console.log(err);
+            reject("Unable to find user:" + userData.userName);
         });
     });
 }

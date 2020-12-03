@@ -299,7 +299,10 @@ app.post("/login", (req, res) => {
         loginHistory: user.loginHistory
         }
         res.redirect('/employees');
-    });
+    }).catch((err)=>
+    {
+        res.render("login", {errorMessage: err, userName: req.body.userName})
+    })
 });
 app.get("/logout", function(req, res) {
     req.session.reset();
