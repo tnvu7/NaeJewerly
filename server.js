@@ -1,10 +1,10 @@
 /*********************************************************************************
-* BTI325 – Assignment 5
+* BTI325 – Assignment 6
 * I declare that this assignment is my own work in accordance with Seneca Academic Policy.
 * No part of this assignment has been copied manually or electronically from any other source
 * (including web sites) or distributed to other students.
 *
-* Name: Thu Nga (Natalie) Vu    Student ID: 132 165 192     Date: 2020/11/20
+* Name: Thu Nga (Natalie) Vu    Student ID: 132 165 192     Date: 2020/12/03
 *
 * Online (Heroku) URL: (make sure you include the link ending with .com, NOT .git
 * https://mysterious-savannah-61047.herokuapp.com/

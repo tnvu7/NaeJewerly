@@ -1,5 +1,6 @@
 var mongoose = require("mongoose");
 const bcrypt = require('bcryptjs');
+const e = require("express");
 
 var Schema = mongoose.Schema;
 
@@ -11,8 +12,8 @@ var userSchema = new Schema({
     "password": String,
     "email": String,
     "loginHistory": [{
-        "dateTime": Date,
-        "userAgent": String
+        dateTime: Date,
+        userAgent: String
     }]
 });
 
@@ -49,43 +50,57 @@ exports.registerUser=(userData)=>{
             reject("Error: Passwords do not match");
         else
         {
-            let newUser = new User(userData);
-            newUser.save((err)=> {
-                if (err) 
-                {
-                    if (err.code == 11000)
-                    reject("User Name already taken");
-                    else
-                    reject(`There was an error creating the user: ${err}`);
-                }
-                else
-                resolve();
+            bcrypt.genSalt(10, function(err, salt) { // Generate a "salt" using 10 rounds
+                if (err) reject("There was an error encrypting the password");
+                else {
+                    bcrypt.hash(userData.password, salt, function(err, hashValue) { // encrypt the password: "myPassword123"
+                        if (err) 
+                            reject("There was an error encrypting the password");
+                        else 
+                        {
+                            let newUser = new User(userData);
+                            newUser.password = hashValue;
+                            newUser.save((err)=> {
+                                if (err) 
+                                {
+                                    if (err.code == 11000)
+                                    reject("User Name already taken");
+                                    else
+                                    reject(`There was an error creating the user: ${err}`);
+                                }
+                                else
+                                    resolve();
+                            });
+                        } 
+                    }); //hash
+                } //else
             });
         }
-    });
+});
 }
 exports.checkUser=(userData)=>{
     return new Promise(function(resolve, reject) {
         User.findOne({ userName: userData.userName })
         .exec().then((foundUser)=> {
-            if (foundUser.password === userData.password)
-            {
-                console.log(foundUser);
-                foundUser.loginHistory.push({dateTime: (new Date()).toString(), userAgent: foundUser.userAgent});
-                User.updateOne(
-                    {userName: foundUser.userName},
-                    {$set:{loginHistory: foundUser.loginHistory}}
-                ).exec().then(()=>{
-                    resolve(foundUser);
-                }).catch((err)=>
+            bcrypt.compare(userData.password, foundUser.password).then((res)=>{
+                if (res === true)
                 {
-                    reject("There was an error verifying the user: " + err);
-                });
-            }
-            else
-            {
-                reject("Incorrect Password for user: " + userData.userName);
-            }
+                    foundUser.loginHistory.push({dateTime: (new Date()).toString(), userAgent: userData.userAgent});
+                    User.updateOne(
+                        {userName: foundUser.userName},
+                        {$set:{loginHistory: foundUser.loginHistory}}
+                    ).exec().then(()=>{
+                        resolve(foundUser);
+                    }).catch((err)=>
+                    {
+                        reject("There was an error verifying the user: " + err);
+                    });
+                }
+                else
+                {
+                    reject("Unable to find user:" + userData.userName)
+                }
+            });
         }).catch((err)=> {
             console.log(err);
             reject("Unable to find user:" + userData.userName);
