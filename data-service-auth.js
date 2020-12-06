@@ -50,10 +50,10 @@ exports.registerUser=(userData)=>{
             reject("Error: Passwords do not match");
         else
         {
-            bcrypt.genSalt(10, function(err, salt) { // Generate a "salt" using 10 rounds
+            bcrypt.genSalt(10, function(err, salt) { 
                 if (err) reject("There was an error encrypting the password");
                 else {
-                    bcrypt.hash(userData.password, salt, function(err, hashValue) { // encrypt the password: "myPassword123"
+                    bcrypt.hash(userData.password, salt, function(err, hashValue) { 
                         if (err) 
                             reject("There was an error encrypting the password");
                         else 
