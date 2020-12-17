@@ -6,12 +6,30 @@
       <meta http-equiv="X-UA-Compatible" content="ie=edge">
       <!-- Latest compiled and minified Bootstrap 3.3.7 CSS -->
       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+      <link rel="stylesheet" href="/css/style.css">
       <title>Home</title>
   </head>
   <body>
+    <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner">
+          <div class="item active">
+            <div class="notif">Free Shipping on all orders over $50</div>
+          </div>
+
+          <div class="item">
+            <div class="notif">Shop our <a href="/gifts">Holiday Collection</a></div>
+          </div>
+        </div>
+    </div>
+
+
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
+        
+<!-- Collect the nav links, forms, and other content for toggling -->
+        
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
             <span class="sr-only">Toggle navigation</span>
@@ -19,19 +37,25 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <span class="navbar-brand" href="#">BTI325 - Thu Nga (Natalie) Vu</span>
+          <a class="navbar-brand" href="/">JEW<span>ELS</span></a>
         </div>
-<!-- Collect the nav links, forms, and other content for toggling -->
-
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
           <ul class="nav navbar-nav">
 
-            {{#navLink "/"}}Home{{/navLink}}
-            {{#navLink "/about"}}About{{/navLink}}
+            <li class="active">{{#navLink "/"}}SHOP{{/navLink}}</li> 
+            <li class="dropdown"> 
+              <a class="dropdown-toggle" data-toggle="dropdown" href="/gifts">HOLIDAY GIFTS
+              <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                      <li><a href="/gifts">Shop All</a></li>
+                      <li><a href="/gifts50">Gifts Under $50</a></li>
+                      <li><a href="/gifts100">Gifts Under $100</a></li>
+                  </ul>
+            </li><!-- /.dropdown -->
+            {{#navLink "/about"}}ABOUT{{/navLink}}
 
           </ul>
-
+        
         {{#if session.user}} 
         <form class="navbar-form navbar-right">
         <div class="dropdown">
@@ -52,16 +76,22 @@
         {{else}}   
              
         <form class="navbar-form navbar-right">
-          <a href="/register" class="btn btn-success"><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;Register</a>
-          <a href="/login" class="btn btn-primary"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;&nbsp;Log In</a>
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search">
+            <div class="input-group-btn">
+              <button class="btn btn-default" type="submit">
+                <i class="glyphicon glyphicon-search"></i>
+              </button>
+            </div>
+          </div>
+          <a href="/register" class="btn btn-success"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;Sign Up</a>
+          <a href="/login" class="btn btn-primary"><span class="glyphicon glyphicon-log-in"></span>&nbsp;&nbsp;Log In</a>
         </form>
         {{/if}} 
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->
     </nav>
-    <div class="container">
         {{{body}}}
-    </div>
     <!-- Latest compiled and minified jQuery 3.2.1 JavaScript -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="crossorigin="anonymous"></script>
     <!-- Latest compiled and minified Bootstrap 3.3.7 JavaScript -->

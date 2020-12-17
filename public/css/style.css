@@ -1,0 +1,14 @@
+.notif {
+    padding: 10px;
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+.notif a {
+    text-decoration: underline;
+    color: palevioletred;
+}
+.navbar.navbar-default {
+    margin: 0;
+}
+

@@ -94,12 +94,23 @@ app.use(function(req,res,next){
     app.locals.activeRoute = (route == "/") ? "/" : route.replace(/\/$/, "");
     next();
     });
-      
+
+app.use(express.static(__dirname + '/public'));  
+
 app.use(express.static("./public/"));
 app.get("/", function(req, res){
     res.render("home");
 });
 
+app.get("/gifts", function(req, res){
+    res.render("gifts");
+});
+app.get("/gifts50", function(req, res){
+    res.render("gifts50");
+});
+app.get("/gifts100", function(req, res){
+    res.render("gifts50");
+});
 app.get("/about", function(req, res){
     res.render("about");
 });
