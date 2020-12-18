@@ -8,6 +8,9 @@
     text-decoration: underline;
     color: palevioletred;
 }
+.navbar.navbar-default {
+    margin: 0;
+}
 .container-fluid {
     background-color: white;
 }
@@ -16,4 +19,18 @@
 }
 .container-fluid.rings {
     background-image: url("/images/73f6d8d93c82e80d06d5368f4a146414.jpg");
+}
+.dropdown-menu {
+    display: none;
+    min-width: 70%;
+}
+.dropdown-menu a:hover{
+    background-color: #000;
+    color: white;
+}
+.active.dropdown:hover .dropdown-menu {
+    display: block;
+}
+.active.dropdown:hover .dropdown-toggle {
+    background-color: transparent;
 }
