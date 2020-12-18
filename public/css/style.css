@@ -8,7 +8,12 @@
     text-decoration: underline;
     color: palevioletred;
 }
-.thumbnail {
-    border: 0;
-    }
-
+.container-fluid {
+    background-color: white;
+}
+.container-fluid h2 {
+    color: white;
+}
+.container-fluid.rings {
+    background-image: url("/images/73f6d8d93c82e80d06d5368f4a146414.jpg");
+}
