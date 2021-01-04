@@ -102,15 +102,10 @@ app.get("/", function(req, res){
     res.render("home");
 });
 
-app.get("/gifts", function(req, res){
-    res.render("gifts");
+app.get("/shop", function(req, res){
+    res.render("shop");
 });
-app.get("/gifts50", function(req, res){
-    res.render("gifts50");
-});
-app.get("/gifts100", function(req, res){
-    res.render("gifts50");
-});
+
 app.get("/about", function(req, res){
     res.render("about");
 });

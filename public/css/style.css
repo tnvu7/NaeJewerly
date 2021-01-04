@@ -11,6 +11,9 @@
 .navbar.navbar-default {
     margin: 0;
 }
+.navbar.navbar-inverse {
+    margin: 0;
+}
 .container-fluid {
     background-color: white;
 }
@@ -20,17 +23,40 @@
 .container-fluid.rings {
     background-image: url("/images/73f6d8d93c82e80d06d5368f4a146414.jpg");
 }
-.dropdown-menu {
-    display: none;
-    min-width: 70%;
+.container-fluid.necklaces {
+    background-image: url("/images/original.jpg");
 }
-.dropdown-menu a:hover{
-    background-color: #000;
-    color: white;
+.container-fluid.earrings {
+    background-image: url("/images/a984110ff35aea034f24656508d0b1e6.jpg")
 }
-.active.dropdown:hover .dropdown-menu {
-    display: block;
+
+#thelinks {
+    float: none;
+    text-align: center;
+    background-color: #ebc8b2;
 }
-.active.dropdown:hover .dropdown-toggle {
-    background-color: transparent;
+#thelinks li {
+    display: inline-block;
+    float: none;
+    font-family: "Sofia", sans-serif;
+    font-size: 14pt;
+}
+#maintext h2, #maintext p {
+    font-family: "Sofia", sans-serif;
+    font-size: 15pt;
+}
+#maintext h2 {
+    font-size: 30pt;
+    font-weight: 200;
+}
+.container-fluid h2 {
+    font-family: 'Quicksand', sans-serif;
+}
+.caption p {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 14pt;
+}
+#mainlink li{
+    font-family: 'Quicksand', sans-serif;
+    font-size: 14pt;
 }
