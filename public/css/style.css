@@ -24,7 +24,7 @@
     background-image: url("/images/73f6d8d93c82e80d06d5368f4a146414.jpg");
 }
 .container-fluid.necklaces {
-    background-image: url("/images/original.jpg");
+    background-image: url("/images/545b42dc0d7b48d4ac0c8f0aee2fa60f.jpg");
 }
 .container-fluid.earrings {
     background-image: url("/images/a984110ff35aea034f24656508d0b1e6.jpg")
@@ -39,9 +39,9 @@
     display: inline-block;
     float: none;
     font-family: "Sofia", sans-serif;
-    font-size: 14pt;
+    font-size: 15pt;
 }
-#maintext h2, #maintext p {
+#maintext h2, .navbar-header a {
     font-family: "Sofia", sans-serif;
     font-size: 15pt;
 }
@@ -49,7 +49,7 @@
     font-size: 30pt;
     font-weight: 200;
 }
-.container-fluid h2 {
+.container-fluid h2, #maintext p {
     font-family: 'Quicksand', sans-serif;
 }
 .caption p {
@@ -60,3 +60,57 @@
     font-family: 'Quicksand', sans-serif;
     font-size: 14pt;
 }
+.img-wrapper {
+    position: relative;
+   }
+  
+  .img-responsive {
+    width: 100%;
+    height: auto;
+  }
+  
+  .img-overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+  }
+  
+  .img-overlay:before {
+    content: ' ';
+    display: block;
+    /* adjust 'height' to position overlay content vertically */
+    height: 86%;
+  }
+
+.img-overlay a {
+    background-color: transparent;
+    border-color: gray;
+    padding-left: 50px;
+    padding-right: 50px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 18pt;
+  }
+.img-overlay p {
+    color: white;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 18pt;
+}
+.carousel-caption h3 {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 35pt;
+    font-weight: 400;
+}
+.carousel-caption p {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 20pt;
+    font-weight: 400;
+}
+footer {
+    background-color: #F4F4F4;
+    color: #585858;
+    padding: 22px;
+  }

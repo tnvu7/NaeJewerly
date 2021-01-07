@@ -13,7 +13,7 @@
       <title>Home</title>
   </head>
   <body>
-    <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="3000">
+    <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="2000">
         <!-- Wrapper for slides -->
         <div class="carousel-inner">
           <div class="item active">
@@ -46,7 +46,6 @@
           <ul class="nav navbar-nav" id="mainlink">
             <li>{{#navLink "/"}}HOME{{/navLink}}</li>
             <li>{{#navLink "/shop"}}SHOP{{/navLink}}</li>
-            <li>{{#navLink "/about"}}ABOUT{{/navLink}}</li>
           </ul>
         
         {{#if session.user}} 
@@ -86,7 +85,12 @@
     </nav>
     
         {{{body}}}
-        
+    
+  <footer class="text-center">
+     <p>&copy; by Natalie Vu </p>
+  </footer>
+
+    </div>
     <!-- Latest compiled and minified jQuery 3.2.1 JavaScript -->
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="crossorigin="anonymous"></script>
     <!-- Latest compiled and minified Bootstrap 3.3.7 JavaScript -->

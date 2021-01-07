@@ -106,10 +106,6 @@ app.get("/shop", function(req, res){
     res.render("shop");
 });
 
-app.get("/about", function(req, res){
-    res.render("about");
-});
-
 app.get("/employees/add", ensureLogin, function(req, res){
     message.getDepartments().then((data)=> {
         res.render("addEmployee", {departments: data});
