@@ -22,12 +22,18 @@
 }
 .container-fluid.rings {
     background-image: url("/images/73f6d8d93c82e80d06d5368f4a146414.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 .container-fluid.necklaces {
     background-image: url("/images/545b42dc0d7b48d4ac0c8f0aee2fa60f.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 .container-fluid.earrings {
-    background-image: url("/images/a984110ff35aea034f24656508d0b1e6.jpg")
+    background-image: url("/images/a984110ff35aea034f24656508d0b1e6.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 #thelinks {
