@@ -19,6 +19,10 @@ var userSchema = new Schema({
 
 let User; 
 
+exports.addtocart=()=>{
+    
+}
+
 exports.initialize=()=>{
     return new Promise(function(resolve, reject) {
         //connect to module
